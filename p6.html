@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Simple SVG Load Test</title>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+
+    <h1 style="color: #333;">External SVG Loading Test</h1>
+    
+    <p>Testing if external SVG files can be loaded at all...</p>
+
+    <!-- Method 1: IMG tag -->
+    <h2>Method 1: IMG Tag</h2>
+    <img src="http://w2.purple-ws.com/test-simple.svg" 
+         width="700" 
+         height="300" 
+         style="border: 2px solid #000;">
+
+    <hr>
+
+    <!-- Method 2: XLink -->
+    <h2>Method 2: XLink Image</h2>
+    <svg xmlns="http://www.w3.org/2000/svg" 
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         width="700" height="300" style="border: 2px solid #000;">
+        <image xlink:href="http://w2.purple-ws.com/test-simple.svg" 
+               x="0" y="0" width="700" height="300"/>
+    </svg>
+
+    <hr>
+
+    <!-- Method 3: CSS Background -->
+    <h2>Method 3: CSS Background</h2>
+    <div style="width: 700px; 
+                height: 300px; 
+                border: 2px solid #000;
+                background-image: url('http://w2.purple-ws.com/test-simple.svg');
+                background-size: contain;
+                background-repeat: no-repeat;">
+    </div>
+
+</body>
+</html>
